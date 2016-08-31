@@ -1,0 +1,15 @@
+<html>
+<body><h1>Test Applicatafasdasds ion</h1>
+<button type="button" id="open-file-manager">Get Directory</button></body>
+<script type="text/javascript">
+const shell = require('electron').shell
+
+const os = require('os')
+
+const fileManagerBtn = document.getElementById('open-file-manager')
+
+fileManagerBtn.addEventListener('click', function (event) {
+  shell.showItemInFolder(os.homedir())
+})
+</script>
+</html>
