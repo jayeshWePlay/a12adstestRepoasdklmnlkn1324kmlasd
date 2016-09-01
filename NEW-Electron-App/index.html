@@ -1,15 +1,90 @@
 <html>
-<body><h1>Test Applicatafasdasds ion</h1>
-<button type="button" id="open-file-manager">Get Directory</button></body>
+<HEAD>
+<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+<!-- normal script imports etc  -->
+<script src="jquery.min.js"></script>    
+
+<!-- Insert this line after script imports -->
+<script>if (window.module) module = window.module;</script>	
+
+
+</HEAD>
+<body>
+	<h1>Test Application to List DMG files within directory</h1>
+	
+	<button type="button" id="open-file-manager">Get Directory</button>
+	<div id="path-address"></div>
+	<br/>
+	<div id="list-div"></div>
+</body>
 <script type="text/javascript">
 const shell = require('electron').shell
 
 const os = require('os')
+var remote = require('electron').remote;
+var dialog = remote.require('electron').dialog;
 
 const fileManagerBtn = document.getElementById('open-file-manager')
 
+
 fileManagerBtn.addEventListener('click', function (event) {
-  shell.showItemInFolder(os.homedir())
+  	var path = dialog.showOpenDialog({
+    	properties: ['openDirectory']
+	});
+	document.getElementById('path-address').innerHTML = 'Selected Address is :'+path
+	console.log(path);
+
+	var _getAllFilesFromFolder = function(dir) {
+
+	    var filesystem = require("fs");
+	    var results = [];
+
+	    filesystem.readdirSync(dir).forEach(function(file) {
+
+	        file = dir+'/'+file;
+	        var stat = filesystem.statSync(file);
+
+	        if (stat && stat.isDirectory()) {
+	            results = results.concat(_getAllFilesFromFolder(file))
+	        } else results.push(file);
+
+	    });
+
+	    return results;
+
+	};
+//	console.log(__dirname);
+	console.log(_getAllFilesFromFolder(path[0]));
+	var filename;
+	for (var i =0; i<_getAllFilesFromFolder(path[0]).length; i++){
+		if(_getAllFilesFromFolder(path[0])[i].indexOf('.mp3') != -1){
+			console.log(filename)
+			filename = _getAllFilesFromFolder(path[0])[i].split('.mp3');
+		// console.log(filename[1])
+		// if(filename[1] == 'dmg')
+			var name = filename[0].split(path+'/')
+			$('<p></p>').html(name[1]).appendTo('list-div')
+			document.getElementById("list-div").innerHTML = document.getElementById("list-div").innerHTML + '<li>'+name[1]+'</li>'
+			console.log(name[1]);	
+		}
+
+
+		
+	}
+
+	// $.ajax({
+	//   url: path[0],
+	//   success: function(data){
+	//      $(data).find("a:contains(.dmg)").each(function(){
+	//         // will loop through 
+	//         var images = $(this).attr("href");
+
+	//         $('<p></p>').html(images).appendTo('list-div')
+
+	//      });
+	//   }
+	// });
 })
 </script>
 </html>

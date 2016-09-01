@@ -1,3 +1,4 @@
+
 const electron = require('electron')
 // Module to control application life.
 const app = electron.app
@@ -10,7 +11,7 @@ let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 500, height: 200, /*frame: false*/})
+  mainWindow = new BrowserWindow({width: 800, height: 600, /*frame: false*/})
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`)
@@ -48,6 +49,8 @@ app.on('activate', function () {
     createWindow()
   }
 })
+
+
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
